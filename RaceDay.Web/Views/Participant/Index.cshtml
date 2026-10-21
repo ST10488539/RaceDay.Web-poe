@@ -1,0 +1,48 @@
+﻿@model List<RaceDay.Web.Models.EventViewModel>
+@{
+    ViewData["Title"] = "Events";
+}
+
+<h2>Upcoming Events</h2>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+        <select name="type" class="form-select">
+            <option value="">-- All Types --</option>
+            <option value="RUN" selected="@(ViewBag.SelectedType == "RUN")">Run</option>
+            <option value="WALK" selected="@(ViewBag.SelectedType == "WALK")">Walk</option>
+            <option value="CYCLE" selected="@(ViewBag.SelectedType == "CYCLE")">Cycle</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <input type="text" name="search" class="form-control" placeholder="Search name or location" value="@ViewBag.Search" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-secondary">Filter</button>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <p>No events found.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var ev in Model)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@ev.EventName</h5>
+                        <p class="card-text">
+                            @ev.EventDate.ToString("dd MMM yyyy") &middot; @ev.Location<br />
+                            @ev.Distance km &middot; @ev.EventType
+                        </p>
+                        <a asp-action="Details" asp-route-id="@ev.EventID" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

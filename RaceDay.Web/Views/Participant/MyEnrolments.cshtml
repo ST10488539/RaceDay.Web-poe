@@ -1,0 +1,49 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model List<RaceDay.Web.Models.EnrolmentViewModel>
+@{
+    ViewData["Title"] = "My Enrolments";
+}
+
+<h2>My Enrolments</h2>
+
+@if (!Model.Any())
+{
+    <p>You haven't enrolled in any events yet.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Race Number</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in Model)
+            {
+                string badgeClass = e.RegistrationStatus switch
+                {
+                    "Registered" => "bg-success",
+                    "Pending" => "bg-warning text-dark",
+                    _ => "bg-secondary"
+                };
+
+                <tr>
+                    <td>@e.EventName</td>
+                    <td>@e.EventDate.ToString("dd MMM yyyy")</td>
+                    <td>@e.CategoryName</td>
+                    <td>@e.RaceNumber</td>
+                    <td><span class="badge @badgeClass">@e.RegistrationStatus</span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,46 @@
+﻿@model RaceDay.Web.Models.ResultFormViewModel
+@{
+    ViewData["Title"] = "Enter Result";
+}
+
+<h2>Enter Result: @Model.ParticipantName</h2>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="EnterResult" method="post">
+    <input type="hidden" asp-for="RegistrationID" />
+    <input type="hidden" asp-for="EventID" />
+    <input type="hidden" asp-for="ParticipantName" />
+
+    <div class="mb-3">
+        <label asp-for="FinishTime" class="form-label">Finish Time (hh:mm:ss)</label>
+        <input asp-for="FinishTime" class="form-control" type="text" placeholder="00:45:30" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ChipTime" class="form-label">Chip Time (optional, hh:mm:ss)</label>
+        <input asp-for="ChipTime" class="form-control" type="text" placeholder="00:45:20" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="OverallPosition" class="form-label"></label>
+        <input asp-for="OverallPosition" class="form-control" type="number" min="1" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CategoryPosition" class="form-label"></label>
+        <input asp-for="CategoryPosition" class="form-control" type="number" min="1" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ResultStatus" class="form-label">Status</label>
+        <select asp-for="ResultStatus" class="form-select">
+            <option value="OFFICIAL">Official (published)</option>
+            <option value="PROVISIONAL">Provisional</option>
+            <option value="DISQUALIFIED">Disqualified</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Result</button>
+    <a asp-action="Results" asp-route-eventId="@Model.EventID" class="btn btn-link">Cancel</a>
+</form>

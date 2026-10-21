@@ -1,0 +1,56 @@
+﻿@model List<RaceDay.Web.Models.EventViewModel>
+@{
+    ViewData["Title"] = "My Events";
+}
+
+<h2>My Events</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<a asp-action="CreateEvent" class="btn btn-primary mb-3">+ Create New Event</a>
+
+@if (!Model.Any())
+{
+    <p>No events yet.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Location</th>
+                <th>Distance</th>
+                <th>Type</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ev in Model)
+            {
+                <tr>
+                    <td>@ev.EventName</td>
+                    <td>@ev.EventDate.ToString("dd MMM yyyy")</td>
+                    <td>@ev.Location</td>
+                    <td>@ev.Distance km</td>
+                    <td>@ev.EventType</td>
+                    <td>
+                        <a asp-action="EditEvent" asp-route-id="@ev.EventID" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <form asp-action="DeleteEvent" asp-route-id="@ev.EventID" method="post" style="display:inline"
+                              onsubmit="return confirm('Delete this event? This cannot be undone.');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,69 @@
+﻿@model RaceDay.Web.Models.EventResultsViewModel
+@{
+    ViewData["Title"] = "Results";
+}
+
+<h2>Results for @Model.EventName</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (!Model.Rows.Any())
+{
+    <p>No one is enrolled in this event yet.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Participant</th>
+                <th>Category</th>
+                <th>Race No.</th>
+                <th>Finish Time</th>
+                <th>Position</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in Model.Rows)
+            {
+                <tr>
+                    <td>@row.Enrolment.ParticipantName</td>
+                    <td>@row.Enrolment.CategoryName</td>
+                    <td>@row.Enrolment.RaceNumber</td>
+                    @if (row.Result != null)
+                    {
+                        string badge = row.Result.ResultStatus switch
+                        {
+                            "OFFICIAL" => "bg-success",
+                            "PROVISIONAL" => "bg-warning text-dark",
+                            "DISQUALIFIED" => "bg-danger",
+                            _ => "bg-secondary"
+                        };
+                        <td>@row.Result.FinishTime.ToString(@"hh\:mm\:ss")</td>
+                        <td>@row.Result.OverallPosition</td>
+                        <td><span class="badge @badge">@row.Result.ResultStatus</span></td>
+                        <td>
+                            <a asp-action="EditResult" asp-route-id="@row.Result.ResultID" asp-route-eventId="@Model.EventID" class="btn btn-sm btn-outline-primary">Edit</a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>-</td>
+                        <td>-</td>
+                        <td><span class="badge bg-secondary">No result</span></td>
+                        <td>
+                            <a asp-action="EnterResult" asp-route-registrationId="@row.Enrolment.RegistrationID" asp-route-eventId="@Model.EventID" class="btn btn-sm btn-primary">Enter Result</a>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-action="EditEvent" asp-route-id="@Model.EventID" class="btn btn-link mt-3">Back to Event</a>

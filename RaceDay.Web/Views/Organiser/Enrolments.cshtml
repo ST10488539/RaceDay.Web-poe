@@ -1,0 +1,48 @@
+﻿html
+@model List<RaceDay.Web.Models.EnrolmentViewModel>
+@{
+    ViewData["Title"] = "Enrolments";
+    int eventId = (int)ViewBag.EventId;
+}
+
+<h2>Enrolments for @ViewBag.EventName</h2>
+
+@if (!Model.Any())
+{
+    <p>No one has enrolled for this event yet.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Participant</th>
+                <th>Category</th>
+                <th>Race Number</th>
+                <th>Status</th>
+                <th>Registered On</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in Model)
+            {
+                string badgeClass = e.RegistrationStatus switch
+                {
+                    "Registered" => "bg-success",
+                    "Pending" => "bg-warning text-dark",
+                    _ => "bg-secondary"
+                };
+
+                <tr>
+                    <td>@e.ParticipantName</td>
+                    <td>@e.CategoryName</td>
+                    <td>@e.RaceNumber</td>
+                    <td><span class="badge @badgeClass">@e.RegistrationStatus</span></td>
+                    <td>@e.RegistrationDate.ToString("dd MMM yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-action="EditEvent" asp-route-id="@eventId" class="btn btn-link mt-3">Back to Event</a>

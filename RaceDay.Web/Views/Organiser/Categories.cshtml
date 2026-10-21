@@ -1,0 +1,55 @@
+﻿@model List<RaceDay.Web.Models.CategoryViewModel>
+@{
+    ViewData["Title"] = "Categories";
+    int eventId = (int)ViewBag.EventId;
+}
+
+<h2>Categories for @ViewBag.EventName</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<a asp-action="CreateCategory" asp-route-eventId="@eventId" class="btn btn-primary mb-3">+ Add Category</a>
+
+@if (!Model.Any())
+{
+    <p>No categories yet for this event.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Distance</th>
+                <th>Age Range</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cat in Model)
+            {
+                <tr>
+                    <td>@cat.CategoryName</td>
+                    <td>@cat.Distance km</td>
+                    <td>@cat.MinAge@(cat.MaxAge != null ? $" - {cat.MaxAge}" : "+")</td>
+                    <td>
+                        <a asp-action="EditCategory" asp-route-id="@cat.CategoryID" asp-route-eventId="@eventId" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <form asp-action="DeleteCategory" asp-route-id="@cat.CategoryID" asp-route-eventId="@eventId" method="post" style="display:inline"
+                              onsubmit="return confirm('Delete this category? This cannot be undone.');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-action="EditEvent" asp-route-id="@eventId" class="btn btn-link mt-3">Back to Event</a>

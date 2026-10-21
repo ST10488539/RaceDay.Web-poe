@@ -1,0 +1,56 @@
+﻿@model RaceDay.Web.Models.OrganiserDashboardViewModel
+@{
+    ViewData["Title"] = "Organiser Dashboard";
+}
+
+<h2>Dashboard</h2>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Total Events</h5>
+                <p class="card-text fs-3">@Model.TotalEvents</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Total Enrolments</h5>
+                <p class="card-text fs-3">@Model.TotalEnrolments</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4>Your Events</h4>
+
+@if (!Model.Events.Any())
+{
+    <p>You haven't created any events yet. <a asp-action="CreateEvent">Create one now</a>.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Enrolments</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ev in Model.Events)
+            {
+                <tr>
+                    <td>@ev.EventName</td>
+                    <td>@ev.EventDate.ToString("dd MMM yyyy")</td>
+                    <td>@Model.EnrolmentCountsByEvent.GetValueOrDefault(ev.EventID, 0)</td>
+                    <td><a asp-action="EditEvent" asp-route-id="@ev.EventID" class="btn btn-sm btn-outline-primary">Manage</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
