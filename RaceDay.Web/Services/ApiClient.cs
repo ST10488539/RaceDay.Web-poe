@@ -59,9 +59,9 @@ public class ApiClient
         return await _httpClient.DeleteAsync(endpoint);
     }
 
-// ---- EVENTS ----
-public async Task<List<EventViewModel>?> GetEventsAsync() =>
-    await GetAsync<List<EventViewModel>>("api/events");
+    // ---- EVENTS ----
+    public async Task<List<EventViewModel>?> GetEventsAsync() =>
+        await GetAsync<List<EventViewModel>>("api/events");
 
     public async Task<EventViewModel?> GetEventAsync(int id) =>
         await GetAsync<EventViewModel>($"api/events/{id}");
@@ -110,8 +110,8 @@ public async Task<List<EventViewModel>?> GetEventsAsync() =>
 
     // ---- ENROLMENTS (Organiser) ----
     public async Task<List<EnrolmentViewModel>?> GetEventEnrolmentsAsync(int eventId) =>
-  
-       await GetAsync<List<EnrolmentViewModel>>($"api/events/{eventId}/enrolments");
+        await GetAsync<List<EnrolmentViewModel>>($"api/events/{eventId}/enrolments");
+
     // ---- RESULTS (Organiser) ----
     public async Task<List<ResultViewModel>?> GetEventResultsAsync(int eventId) =>
         await GetAsync<List<ResultViewModel>>($"api/events/{eventId}/results");
@@ -121,4 +121,23 @@ public async Task<List<EventViewModel>?> GetEventsAsync() =>
 
     public async Task<HttpResponseMessage> UpdateResultAsync(int id, ResultFormViewModel dto) =>
         await PutAsync($"api/results/{id}", dto);
+
+   
+    private async Task<HttpResponseMessage> UploadFileAsync(string endpoint, IFormFile file)
+    {
+        using var content = new MultipartFormDataContent();
+        using var stream = file.OpenReadStream();
+
+        var fileContent = new StreamContent(stream);
+        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+        content.Add(fileContent, "file", file.FileName);
+
+        return await _httpClient.PostAsync(endpoint, content);
+    }
+
+    public async Task<HttpResponseMessage> UploadEventImageAsync(int eventId, IFormFile file) =>
+        await UploadFileAsync($"api/events/{eventId}/image", file);
+
+    public async Task<HttpResponseMessage> UploadProfilePictureAsync(IFormFile file) =>
+        await UploadFileAsync("api/profile/picture", file);
 }

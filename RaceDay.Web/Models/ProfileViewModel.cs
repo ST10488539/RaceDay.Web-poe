@@ -21,6 +21,7 @@ public class ProfileViewModel
     public DateTime? DateOfBirth { get; set; }
 
     public string? Gender { get; set; }
+    public string? ProfilePictureURL { get; set; }
     public string? EmergencyContact { get; set; }
     public string? MedicalNotes { get; set; }
 }
