@@ -46,6 +46,35 @@
 </form>
 
 <hr />
+
+<h4>Banner image</h4>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (!string.IsNullOrEmpty(Model.ImageURL))
+{
+    <img src="@Model.ImageURL" alt="Event banner" class="img-fluid rounded mb-3" style="max-height: 240px;" />
+}
+else
+{
+    <p class="text-muted">No banner image yet.</p>
+}
+
+<form asp-action="UploadEventImage" asp-route-id="@Model.EventID" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="imageFile" class="form-label">Choose a JPG, PNG or WEBP image (max 5 MB)</label>
+        <input type="file" name="imageFile" id="imageFile" class="form-control" accept=".jpg,.jpeg,.png,.webp" required />
+    </div>
+    <button type="submit" class="btn btn-outline-primary">Upload Banner</button>
+</form>
+<hr />
 <a asp-action="Categories" asp-route-eventId="@Model.EventID" class="btn btn-outline-secondary">Manage Categories</a>
 <a asp-action="Enrolments" asp-route-eventId="@Model.EventID" class="btn btn-outline-secondary">View Enrolments</a>
 <a asp-action="Results" asp-route-eventId="@Model.EventID" class="btn btn-outline-secondary">Enter Results</a>

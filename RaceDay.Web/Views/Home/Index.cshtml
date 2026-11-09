@@ -1,8 +1,42 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "Welcome";
+    var role = Context.Session.GetString("UserRole");
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<img src="~/images/hero.jpg" asp-append-version="true" alt="Runners at the start of a race"
+     class="img-fluid rounded-3 mb-4" style="width: 100%; max-height: 340px; object-fit: cover;" />
+
+<div class="p-5 mb-4 bg-light rounded-3 text-center">
+    <h1 class="display-5 fw-bold">Welcome to RaceDay</h1>
+    <p class="lead">Find runs, walks and charity cycles, enter with a few clicks, and follow your results.</p>
+
+    @if (role == "Organiser")
+    {
+        <a asp-controller="Organiser" asp-action="Dashboard" class="btn btn-primary btn-lg">Go to your dashboard</a>
+    }
+    else if (role == "Participant")
+    {
+        <a asp-controller="Participant" asp-action="Index" class="btn btn-primary btn-lg">Browse events</a>
+    }
+    else
+    {
+        <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg me-2">Log in</a>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-primary btn-lg">Register</a>
+    }
+</div>
+
+<div class="row text-center">
+    <div class="col-md-4 mb-3">
+        <h4>Browse events</h4>
+        <p>See upcoming runs, walks and cycles with their dates, locations and distances.</p>
+    </div>
+    <div class="col-md-4 mb-3">
+        <h4>Enter in minutes</h4>
+        <p>Pick the category that suits your age and distance, and get your race number straight away.</p>
+    </div>
+    <div class="col-md-4 mb-3">
+        <h4>Follow your results</h4>
+        <p>Finish times, positions and pace are recorded by the organisers and shown on your page.</p>
+    </div>
 </div>

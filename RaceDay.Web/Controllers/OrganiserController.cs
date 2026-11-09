@@ -130,6 +130,34 @@ public class OrganiserController : Controller
         return View(model);
     }
 
+    // POST /Organiser/UploadEventImage/5
+    [HttpPost]
+    public async Task<IActionResult> UploadEventImage(int id, IFormFile? imageFile)
+    {
+        if (!IsLoggedInOrganiser())
+            return RedirectToAction("Login", "Account");
+
+        if (imageFile == null || imageFile.Length == 0)
+        {
+            TempData["Error"] = "Please choose an image to upload.";
+            return RedirectToAction("EditEvent", new { id });
+        }
+
+        var response = await _apiClient.UploadEventImageAsync(id, imageFile);
+
+        if (response.IsSuccessStatusCode)
+        {
+            TempData["Success"] = "Banner image uploaded.";
+        }
+        else
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            TempData["Error"] = $"Failed to upload image: {error}";
+        }
+
+        return RedirectToAction("EditEvent", new { id });
+    }
+
     // POST /Organiser/DeleteEvent/5
     [HttpPost]
     public async Task<IActionResult> DeleteEvent(int id)
@@ -151,6 +179,7 @@ public class OrganiserController : Controller
 
         return RedirectToAction("Events");
     }
+
     // GET /Organiser/Categories?eventId=5
     public async Task<IActionResult> Categories(int eventId)
     {
@@ -266,6 +295,8 @@ public class OrganiserController : Controller
 
         return RedirectToAction("Categories", new { eventId });
     }
+
+    // GET /Organiser/Enrolments?eventId=5
     public async Task<IActionResult> Enrolments(int eventId)
     {
         if (!IsLoggedInOrganiser())
@@ -281,6 +312,7 @@ public class OrganiserController : Controller
 
         return View(enrolments);
     }
+
     // GET /Organiser/Results?eventId=5
     public async Task<IActionResult> Results(int eventId)
     {

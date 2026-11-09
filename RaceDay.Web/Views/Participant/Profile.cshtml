@@ -9,6 +9,20 @@
 {
     <div class="alert alert-success">@TempData["Success"]</div>
 }
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (!string.IsNullOrEmpty(Model.ProfilePictureURL))
+{
+    <img src="@Model.ProfilePictureURL" alt="Profile picture" class="rounded-circle mb-3"
+         style="width: 120px; height: 120px; object-fit: cover;" />
+}
+else
+{
+    <p class="text-muted">No profile picture yet.</p>
+}
 
 <div asp-validation-summary="All" class="text-danger"></div>
 
@@ -66,4 +80,14 @@
     <button type="submit" class="btn btn-primary">Save Changes</button>
 </form>
 
-<p class="mt-3 text-muted">Profile picture upload will be added once Azure Blob Storage is integrated (Step 5).</p>
+<hr />
+
+<h4>Profile picture</h4>
+
+<form asp-action="UploadProfilePicture" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="pictureFile" class="form-label">Choose a JPG, PNG or WEBP image (max 5 MB)</label>
+        <input type="file" name="pictureFile" id="pictureFile" class="form-control" accept=".jpg,.jpeg,.png,.webp" required />
+    </div>
+    <button type="submit" class="btn btn-outline-primary">Upload Picture</button>
+</form>
