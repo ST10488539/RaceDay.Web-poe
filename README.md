@@ -115,7 +115,7 @@ The API repository contains 56 automated integration tests covering authenticati
 The final system adds `Distance` to events and `ProfilePictureURL` to users. It also keeps the extra columns from my original database (`Gender`, `ImageURL`, `ChipTime`, `Humidity` and others), and adds participant, route and weather endpoints.
 
 \## youtube video link
-
+ 
 https://youtu.be/O1kUTXkw6tA
 
 
